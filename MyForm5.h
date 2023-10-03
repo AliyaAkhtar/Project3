@@ -1,4 +1,10 @@
 #pragma once
+#include <iostream>
+#include <fstream>
+#include <msclr/marshal_cppstd.h>
+#include <sstream>
+#include <algorithm>
+
 
 namespace Project3 {
 
@@ -40,16 +46,28 @@ namespace Project3 {
 	private: System::Windows::Forms::Button^ btn_prod_detail;
 	private: System::Windows::Forms::Label^ lbl_prod_formula;
 	private: System::Windows::Forms::TextBox^ tb_prod_spec;
+	private: System::Windows::Forms::TextBox^ tb_prod_weight;
+	private: System::Windows::Forms::TextBox^ tb_prod_unit;
 
 
-	private: System::Windows::Forms::TextBox^ textBox1;
 
-	private: System::Windows::Forms::TextBox^ textBox3;
+
+
+
 
 	private: System::Windows::Forms::TextBox^ tb_prod_formula;
 	private: System::Windows::Forms::Label^ lb_prod_weight;
 	private: System::Windows::Forms::Label^ lb_prod_unit;
 	private: System::Windows::Forms::Label^ lb_prod_spec;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel1;
+	private: System::Windows::Forms::Button^ btn_delete_prod_detail;
+	private: System::Windows::Forms::Button^ btn_submit_prod_detail;
+	private: System::Windows::Forms::Button^ btn_cancel;
+
+
+
+	private: System::ComponentModel::IContainer^ components;
+
 
 
 
@@ -59,7 +77,7 @@ namespace Project3 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -74,12 +92,17 @@ namespace Project3 {
 			this->btn_prod_detail = (gcnew System::Windows::Forms::Button());
 			this->lbl_prod_formula = (gcnew System::Windows::Forms::Label());
 			this->tb_prod_spec = (gcnew System::Windows::Forms::TextBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->tb_prod_weight = (gcnew System::Windows::Forms::TextBox());
+			this->tb_prod_unit = (gcnew System::Windows::Forms::TextBox());
 			this->tb_prod_formula = (gcnew System::Windows::Forms::TextBox());
 			this->lb_prod_weight = (gcnew System::Windows::Forms::Label());
 			this->lb_prod_unit = (gcnew System::Windows::Forms::Label());
 			this->lb_prod_spec = (gcnew System::Windows::Forms::Label());
+			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->btn_delete_prod_detail = (gcnew System::Windows::Forms::Button());
+			this->btn_submit_prod_detail = (gcnew System::Windows::Forms::Button());
+			this->btn_cancel = (gcnew System::Windows::Forms::Button());
+			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// btn_manufacturer
@@ -149,27 +172,27 @@ namespace Project3 {
 			this->tb_prod_spec->Size = System::Drawing::Size(242, 25);
 			this->tb_prod_spec->TabIndex = 9;
 			// 
-			// textBox1
+			// tb_prod_weight
 			// 
-			this->textBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
+			this->tb_prod_weight->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->tb_prod_weight->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(349, 132);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(242, 25);
-			this->textBox1->TabIndex = 10;
+			this->tb_prod_weight->Location = System::Drawing::Point(349, 132);
+			this->tb_prod_weight->Name = L"tb_prod_weight";
+			this->tb_prod_weight->Size = System::Drawing::Size(242, 25);
+			this->tb_prod_weight->TabIndex = 10;
 			// 
-			// textBox3
+			// tb_prod_unit
 			// 
-			this->textBox3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
+			this->tb_prod_unit->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->textBox3->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->tb_prod_unit->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox3->Location = System::Drawing::Point(349, 205);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(242, 25);
-			this->textBox3->TabIndex = 12;
+			this->tb_prod_unit->Location = System::Drawing::Point(349, 205);
+			this->tb_prod_unit->Name = L"tb_prod_unit";
+			this->tb_prod_unit->Size = System::Drawing::Size(242, 25);
+			this->tb_prod_unit->TabIndex = 12;
 			// 
 			// tb_prod_formula
 			// 
@@ -215,18 +238,71 @@ namespace Project3 {
 			this->lb_prod_spec->TabIndex = 17;
 			this->lb_prod_spec->Text = L"Enter Any Specifications";
 			// 
+			// tableLayoutPanel1
+			// 
+			this->tableLayoutPanel1->ColumnCount = 2;
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				50)));
+			this->tableLayoutPanel1->Controls->Add(this->btn_delete_prod_detail, 1, 0);
+			this->tableLayoutPanel1->Controls->Add(this->btn_submit_prod_detail, 0, 0);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(349, 325);
+			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
+			this->tableLayoutPanel1->RowCount = 1;
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(315, 40);
+			this->tableLayoutPanel1->TabIndex = 18;
+			// 
+			// btn_delete_prod_detail
+			// 
+			this->btn_delete_prod_detail->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->btn_delete_prod_detail->Location = System::Drawing::Point(160, 3);
+			this->btn_delete_prod_detail->Name = L"btn_delete_prod_detail";
+			this->btn_delete_prod_detail->Size = System::Drawing::Size(149, 34);
+			this->btn_delete_prod_detail->TabIndex = 12;
+			this->btn_delete_prod_detail->Text = L"Delete";
+			this->btn_delete_prod_detail->UseVisualStyleBackColor = true;
+			// 
+			// btn_submit_prod_detail
+			// 
+			this->btn_submit_prod_detail->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->btn_submit_prod_detail->Location = System::Drawing::Point(3, 3);
+			this->btn_submit_prod_detail->Name = L"btn_submit_prod_detail";
+			this->btn_submit_prod_detail->Size = System::Drawing::Size(151, 34);
+			this->btn_submit_prod_detail->TabIndex = 0;
+			this->btn_submit_prod_detail->Text = L"Submit";
+			this->btn_submit_prod_detail->UseVisualStyleBackColor = true;
+			this->btn_submit_prod_detail->Click += gcnew System::EventHandler(this, &MyForm5::btn_submit_prod_detail_Click);
+			// 
+			// btn_cancel
+			// 
+			this->btn_cancel->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->btn_cancel->Location = System::Drawing::Point(662, 265);
+			this->btn_cancel->Name = L"btn_cancel";
+			this->btn_cancel->Size = System::Drawing::Size(80, 26);
+			this->btn_cancel->TabIndex = 19;
+			this->btn_cancel->Text = L"Cancel";
+			this->btn_cancel->UseVisualStyleBackColor = true;
+			this->btn_cancel->Click += gcnew System::EventHandler(this, &MyForm5::btn_cancel_Click);
+			// 
 			// MyForm5
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Control;
-			this->ClientSize = System::Drawing::Size(767, 354);
+			this->ClientSize = System::Drawing::Size(767, 367);
+			this->Controls->Add(this->btn_cancel);
+			this->Controls->Add(this->tableLayoutPanel1);
 			this->Controls->Add(this->lb_prod_spec);
 			this->Controls->Add(this->lb_prod_unit);
 			this->Controls->Add(this->lb_prod_weight);
 			this->Controls->Add(this->tb_prod_formula);
-			this->Controls->Add(this->textBox3);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->tb_prod_unit);
+			this->Controls->Add(this->tb_prod_weight);
 			this->Controls->Add(this->tb_prod_spec);
 			this->Controls->Add(this->lbl_prod_formula);
 			this->Controls->Add(this->btn_prod_detail);
@@ -234,11 +310,131 @@ namespace Project3 {
 			this->Controls->Add(this->btn_category);
 			this->Controls->Add(this->btn_manufacturer);
 			this->Name = L"MyForm5";
-			this->Text = L"MyForm5";
+			this->Text = L"Pharmacy Inventory";
+			this->tableLayoutPanel1->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	};
+	private: System::Void btn_submit_prod_detail_Click(System::Object^ sender, System::EventArgs^ e) {
+		int Product_details_id;
+		
+		String^ Pd_formula = this->tb_prod_formula->Text;
+		String^ Pd_weight = this->tb_prod_weight->Text;
+		String^ Pd_unit = this->tb_prod_unit->Text;
+		String^ Pd_spec = this->tb_prod_spec->Text;
+		std::ifstream infile("C:/Users/aliya.akhtar/Desktop/ProductDetails_Id.txt");
+		if (infile.is_open()) {   //Check if the file is open or not
+			infile >> Product_details_id;   //Reading the Product ID from file
+
+			infile.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found"); //Pop up message 
+		}
+		//Opening the file in Write mode
+		std::ofstream outfile1("C:/Users/aliya.akhtar/Desktop/Product Details.txt", std::ios::app);
+		if (outfile1.is_open()) {
+			std::string  Pd_formula_str, Pd_weight_str, Pd_unit_str, Pd_spec_str;
+			if (!String::IsNullOrEmpty(this->tb_prod_formula->Text))    //Check whether the textbox is empty or not
+				Pd_formula_str = msclr::interop::marshal_as<std::string>(Pd_formula);
+			if (!String::IsNullOrEmpty(this->tb_prod_weight->Text))
+				Pd_weight_str = msclr::interop::marshal_as<std::string>(Pd_weight);
+			if (!String::IsNullOrEmpty(this->tb_prod_unit->Text))
+				Pd_unit_str = msclr::interop::marshal_as<std::string>(Pd_unit);
+			if (!String::IsNullOrEmpty(this->tb_prod_spec->Text))
+				Pd_spec_str = msclr::interop::marshal_as<std::string>(Pd_spec);
+
+			outfile1 << "Product ID :" << Product_details_id << " | " << "Product's Formula :" << Pd_formula_str << " | " << "Product's Weight :" << Pd_weight_str << " | " << "Product's Unit :" << Pd_unit_str << " | " << "Product's Specification :" << Pd_spec_str << "\n";
+			//outfile1 << "---------------------------------------------------------------------------------------------------------- " << "\n";
+			outfile1.close();
+
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+		/*std::ifstream infile1("C:/Users/aliya.akhtar/Desktop/Product_Id.txt");
+		int Product_id;
+		if (infile1.is_open()) {   //Check if the file is open or not
+			infile1 >> Product_id;   //Reading the Product ID from file
+
+			infile1.close();
+
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found"); //Pop up message 
+		}
+		std::ofstream outfile2("C:/Users/aliya.akhtar/Desktop/Product_Id.txt"); //Opening file for increasing the value of Product_ID
+		
+
+		if (outfile2.is_open()) {
+			Product_id++;       //incrementing the product id
+			outfile2 << Product_id;
+			outfile2.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+		std::ifstream infile2("C:/Users/aliya.akhtar/Desktop/ProductCategory_Id.txt");
+		int category_id;
+		if (infile2.is_open()) {   //Check if the file is open or not
+			infile2 >> category_id;   //Reading the Product ID from file
+
+			infile2.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+		std::ofstream outfile3("C:/Users/aliya.akhtar/Desktop/ProductCategory_Id.txt"); //Opening file for increasing the value of Category_ID
+		
+		if (outfile3.is_open()) {
+			category_id++;         //incrementing the category id
+			outfile3 << category_id;
+			outfile3.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+		std::ifstream manuIdFile("C:/Users/aliya.akhtar/Desktop/Manufacturers_Id.txt");
+		int manufacturer_id;
+
+		if (manuIdFile.is_open()) {
+			manuIdFile >> manufacturer_id;  // Read the current manufacturer ID from the file
+			manuIdFile.close();
+		}
+		std::ofstream newManuIdFile("C:/Users/aliya.akhtar/Desktop/Manufacturers_Id.txt");
+		
+		if (newManuIdFile.is_open()) {
+			manufacturer_id++;
+			newManuIdFile << manufacturer_id;
+			newManuIdFile.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+		*/
+		std::ofstream newProdDetailIdFile("C:/Users/aliya.akhtar/Desktop/ProductDetails_Id.txt");
+		if (newProdDetailIdFile.is_open()) {
+			Product_details_id++;
+			newProdDetailIdFile << Product_details_id;
+			newProdDetailIdFile.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error! File Not Found");
+		}
+
+		System::Windows::Forms::MessageBox::Show("Record has been added to file!");
+
+		// Clear the textboxes
+		this->tb_prod_formula->Text = "";
+		this->tb_prod_weight->Text = "";
+		this->tb_prod_unit->Text = "";
+		this->tb_prod_spec->Text = "";
+	}
+
+	private: System::Void btn_cancel_Click(System::Object^ sender, System::EventArgs^ e) {
+		this->Close();
+	}
+};
 }

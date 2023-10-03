@@ -122,29 +122,31 @@ namespace Project3 {
 			this->Controls->Add(this->btn_category);
 			this->Controls->Add(this->btn_manufacturer);
 			this->Name = L"MyForm1";
-			this->Text = L"MyForm1";
+			this->Text = L"Pharmacy Inventory";
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void btn_manufacturer_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->Hide();
+		//this->Hide();
 		MyForm2^ form2 = gcnew MyForm2;
 		form2->Show();
 		
 	}
-
 	private: System::Void btn_category_Click(System::Object^ sender, System::EventArgs^ e) {
-		// Show an error message
-		System::Windows::Forms::MessageBox::Show("Error! Kindly enter the data for Manufacturers");
+		//this->Hide();
+		MyForm3^ form3 = gcnew MyForm3;
+		form3->Show();
 	}
 	private: System::Void btn_product_Click(System::Object^ sender, System::EventArgs^ e) {
-		// Show an error message
-		System::Windows::Forms::MessageBox::Show("Error! Kindly enter the data for Manufacturers");
+		//this->Hide();
+		MyForm4^ form4 = gcnew MyForm4;
+		form4->Show();
 	}
 	private: System::Void btn_prod_detail_Click(System::Object^ sender, System::EventArgs^ e) {
-		// Show an error message
-		System::Windows::Forms::MessageBox::Show("Error! Kindly enter the data for Manufacturers");
+		//this->Hide();
+		MyForm5^ form5 = gcnew MyForm5;
+		form5->Show();
 	}
 };
 }
