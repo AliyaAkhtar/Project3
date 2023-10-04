@@ -5,6 +5,8 @@
 #include <msclr/marshal_cppstd.h>
 #include <sstream>
 #include <algorithm>
+#include <map>
+#include <set>
 
 namespace Project3 {
 
@@ -13,6 +15,7 @@ namespace Project3 {
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
+	using namespace System::Collections::Generic;
 	using namespace System::Drawing;
 
 	/// <summary>
@@ -20,10 +23,16 @@ namespace Project3 {
 	/// </summary>
 	public ref class MyForm3 : public System::Windows::Forms::Form
 	{
+	private:
+		Dictionary<int, String^>^ manufacturerMap;
+		Dictionary<String^, String^>^ manufacturerNameMap;
 	public:
 		MyForm3(void)
 		{
 			InitializeComponent();
+			manufacturerMap = gcnew Dictionary<int, String^>();
+			manufacturerNameMap = gcnew Dictionary<String^, String^>();
+			PopulateManufacturerComboBox();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -209,6 +218,7 @@ namespace Project3 {
 			this->btn_search_cat->TabIndex = 17;
 			this->btn_search_cat->Text = L"Search";
 			this->btn_search_cat->UseVisualStyleBackColor = true;
+			this->btn_search_cat->Click += gcnew System::EventHandler(this, &MyForm3::btn_search_cat_Click);
 			// 
 			// btn_cancel
 			// 
@@ -254,6 +264,7 @@ namespace Project3 {
 		System::Windows::Forms::MessageBox::Show("Error! Kindly enter the data for Product");
 	}
 	*/
+
 	private: System::Void btn_submit_cat_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ categoryName = this->tb_prod_cat->Text;
 		String^ selectedManufacturer = this->cmb_select_manu->Text->Trim();
@@ -360,6 +371,7 @@ namespace Project3 {
 			System::Windows::Forms::MessageBox::Show("Category ID should not be entered manually.");
 		}
 	}
+	
 
 	private: System::Void btn_delete_cat_Click(System::Object^ sender, System::EventArgs^ e) {
 		int catIdToDelete = System::Convert::ToInt32(tb_cat_id->Text);
@@ -426,9 +438,12 @@ namespace Project3 {
 	private: System::Void MyForm3_Load(System::Object^ sender, System::EventArgs^ e) {
 		// Initialize the ComboBox with manufacturer names
 		PopulateManufacturerComboBox();
+		// Reset the ComboBox selection to no selection
+		cmb_select_manu->SelectedIndex = -1;
 	}
-
+/*
 	private: void PopulateManufacturerComboBox() {
+
 		// Create a list to store manufacturer names
 		System::Collections::Generic::List<String^>^ manufacturerNames = gcnew System::Collections::Generic::List<String^>();
 
@@ -458,6 +473,287 @@ namespace Project3 {
 		// Bind the ComboBox to the list of manufacturer names
 		cmb_select_manu->DataSource = manufacturerNames;
 
+		// Set the DisplayMember property to specify which property of the data source to display
+		cmb_select_manu->DisplayMember = "Value";
+
+	}*/
+
+	private: void PopulateManufacturerComboBox() {
+		// Open the manufacturer file for reading
+		std::ifstream manuRecordsFile("C:/Users/aliya.akhtar/Desktop/Manufacturers_Record.txt");
+		std::string line;
+
+		if (manuRecordsFile.is_open()) {
+			while (std::getline(manuRecordsFile, line)) {
+				// Split the line by the '|' delimiter
+				std::istringstream iss(line);
+				std::string idPart, namePart, addressPart;
+
+				if (std::getline(iss, idPart, '|') && std::getline(iss, namePart, '|') && std::getline(iss, addressPart)) {
+					// Trim whitespace from extracted parts
+					std::string manufacturerName = namePart;
+
+					// Convert the manufacturer name to System::String^
+					String^ managedManufacturerName = gcnew String(manufacturerName.c_str());
+					// Check if the key already exists in the dictionary
+					if (!manufacturerNameMap->ContainsKey(managedManufacturerName)) {
+						// Add the name to the ComboBox
+						cmb_select_manu->Items->Add(managedManufacturerName);
+
+						// Add the mapping to the manufacturerNameMap
+						manufacturerNameMap->Add(managedManufacturerName, managedManufacturerName);
+					}
+				}
+			}
+
+			manuRecordsFile.close();
+		}
 	}
+
+/*
+	private: System::Void btn_search_cat_Click(System::Object^ sender, System::EventArgs^ e) {
+		//int categoryId = System::Convert::ToInt32(tb_cat_id->Text);
+		int categoryId = System::Convert::ToInt32(tb_cat_id->Text->Trim());
+
+		// Create a mapping of manufacturer IDs to names
+		std::map<int, std::string> manufacturerMap;
+
+		std::ifstream manuRecordsFile("C:/Users/aliya.akhtar/Desktop/Manufacturers_Record.txt");
+		std::string manuLine;
+
+		if (manuRecordsFile.is_open()) {
+			while (std::getline(manuRecordsFile, manuLine)) {
+				std::istringstream manuIss(manuLine);
+				int manu_id;
+				std::string manu_name;
+				std::string manu_address;
+
+				// Extract ID, name, and address
+				if (manuIss >> manu_id >> manu_name >> manu_address) {
+					// Add the ID and name to the map
+					manufacturerMap[manu_id] = manu_name;
+				}
+			}
+			manuRecordsFile.close();
+		}
+
+		// Open the category file to search for the category data
+		std::ifstream catFile("C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt");
+		std::string line;
+
+		if (catFile.is_open()) {
+			while (std::getline(catFile, line)) {
+				std::istringstream iss(line);
+				int cat_id;
+				std::string data;
+
+				// Extract ID
+				iss >> cat_id;
+
+				if (cat_id == categoryId) {
+					// Extract the remaining data as a single string
+					std::getline(iss, data);
+
+					// Find the positions of the '|' delimiter
+					size_t pos1 = data.find("|");
+					size_t pos2 = data.find("|", pos1 + 1);
+
+					if (pos1 != std::string::npos && pos2 != std::string::npos) {
+						// Extract the manufacturer ID and category type
+						std::string manuIdStr = data.substr(pos1 + 1, pos2 - pos1 - 1);
+						std::string cat_type = data.substr(pos2 + 1);
+
+						// Convert the manufacturer ID to an integer
+						int manuId = std::stoi(manuIdStr);
+
+						// Look up the manufacturer name in the map
+						std::string manuName = "";
+						auto it = manufacturerMap.find(manuId);
+						if (it != manufacturerMap.end()) {
+							manuName = it->second;
+							System::Windows::Forms::MessageBox::Show("Manufacturer Name: " + gcnew String(manuName.c_str()));
+
+							// Set the ComboBox's selected item to the manufacturer name
+							cmb_select_manu->Text = gcnew String(manuName.c_str());
+						}
+						//else {
+							 //If the manufacturer ID is not found in the map, display an error
+							//System::Windows::Forms::MessageBox::Show("Manufacturer not found for ID: " + gcnew String(manuIdStr.c_str()));
+						//}
+
+						// Display the data
+						String^ cat_typeStr = gcnew String(cat_type.c_str());
+
+						tb_prod_cat->Text = cat_typeStr;
+
+						//catFile.close();
+						return;
+					}
+				}
+			}
+			catFile.close();
+		}
+
+		// If the record was not found
+		tb_prod_cat->Text = "";
+		cmb_select_manu->Text = "";  // Clear the ComboBox text
+		// Show an error message
+		System::Windows::Forms::MessageBox::Show("Record for the entered ID does not exist.");
+	}
+	*/
+	/*
+	private: System::Void btn_search_cat_Click(System::Object^ sender, System::EventArgs^ e) {
+		int categoryId = System::Convert::ToInt32(tb_cat_id->Text);
+
+		// Create a mapping of manufacturer IDs to names
+		std::map<int, std::string> manufacturerMap;
+
+		std::ifstream manuRecordsFile("C:/Users/aliya.akhtar/Desktop/Manufacturers_Record.txt");
+		std::string manuLine;
+
+		if (manuRecordsFile.is_open()) {
+			while (std::getline(manuRecordsFile, manuLine)) {
+				std::istringstream manuIss(manuLine);
+				int manu_id;
+				std::string manu_name;
+				std::string manu_address;
+
+				// Extract ID, name, and address
+				if (manuIss >> manu_id >> manu_name >> manu_address) {
+					// Add the ID and name to the map
+					manufacturerMap[manu_id] = manu_name;
+				}
+			}
+			manuRecordsFile.close();
+		}
+
+		// Open the category file to search for the category data
+		std::ifstream catFile("C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt");
+		std::string line;
+
+		if (catFile.is_open()) {
+			while (std::getline(catFile, line)) {
+				std::istringstream iss(line);
+				int cat_id;
+				std::string data;
+
+				// Extract ID
+				iss >> cat_id;
+
+				if (cat_id == categoryId) {
+					// Extract the remaining data as a single string
+					std::getline(iss, data);
+
+					// Find the positions of the '|' delimiter
+					size_t pos1 = data.find("|");
+					size_t pos2 = data.find("|", pos1 + 1);
+
+					if (pos1 != std::string::npos && pos2 != std::string::npos) {
+						// Extract the manufacturer ID and category type
+						std::string manuIdStr = data.substr(pos1 + 1, pos2 - pos1 - 1);
+						std::string cat_type = data.substr(pos2 + 1);
+
+						// Convert the manufacturer ID to an integer
+						int manuId = std::stoi(manuIdStr);
+
+						// Look up the manufacturer name in the map
+						std::string manuName = "";
+						auto it = manufacturerMap.find(manuId);
+						if (it != manufacturerMap.end()) {
+							manuName = it->second;
+							System::Windows::Forms::MessageBox::Show("Manufacturer Name: " + gcnew String(manuName.c_str()));
+
+							// Set the ComboBox's selected item to the manufacturer name
+							cmb_select_manu->Text = gcnew String(manuName.c_str());
+						}
+
+						// Display the data
+						String^ cat_typeStr = gcnew String(cat_type.c_str());
+
+						tb_prod_cat->Text = cat_typeStr;
+
+						//catFile.close();
+						return;
+					}
+				}
+			}
+			catFile.close();
+		}
+
+		// If the record was not found
+		tb_prod_cat->Text = "";
+		cmb_select_manu->Text = "";  // Clear the ComboBox text
+		// Show an error message
+		System::Windows::Forms::MessageBox::Show("Record for the entered ID does not exist.");
+	}
+*/
+	private: System::Void btn_search_cat_Click(System::Object^ sender, System::EventArgs^ e) {
+		int catIdToSearch = System::Convert::ToInt32(tb_cat_id->Text);
+		System::String^ filePath = "C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt";
+		std::wstring filePathWStr = msclr::interop::marshal_as<std::wstring>(filePath);
+
+		std::ifstream infile2(filePathWStr);
+		std::string line;
+		bool productFound = false; // Flag to track whether the product was found
+
+		if (infile2.is_open()) {
+			while (std::getline(infile2, line)) {
+				std::istringstream iss(line);
+				//std::string PdIDStr;
+
+				// Extract the PdIDPart
+				std::string catIDPart, manuIDPart, category_type;
+				if (std::getline(iss, catIDPart, '|') && std::getline(iss, manuIDPart, '|') && std::getline(iss, category_type)) {
+					// Convert catIDPart to an integer
+					int catID = std::stoi(catIDPart);
+
+					// Check if catID matches the one to search
+					if (catID == catIdToSearch) {
+						// Display product details
+						std::string categorytypeStr = category_type;
+						
+						// Set the text of Windows Forms controls
+						tb_prod_cat->Text = gcnew System::String(categorytypeStr.c_str());
+						
+						// Now, find and set the manufacturer
+						std::ifstream infile3("C:/Users/aliya.akhtar/Desktop/Manufacturers_Record.txt");
+						if (infile3.is_open()) {
+							while (std::getline(infile3, line)) {
+								std::istringstream iss(line);
+								std::string manuIDPart, manuNamePart, manuAddresPart;
+								if (std::getline(iss, manuIDPart, '|') && std::getline(iss, manuNamePart, '|') && std::getline(iss, manuAddresPart)) {
+									int manuID = std::stoi(manuIDPart);
+
+									// Check if manuID matches the one from the product
+									if (manuID == std::stoi(manuIDPart)) {
+										std::string manuNameStr = manuNamePart;
+										cmb_select_manu->Text = gcnew System::String(manuNameStr.c_str());
+										break; // Category found, no need to continue searching
+									}
+								}
+							}
+							infile3.close();
+						}
+
+						productFound = true; // Set the flag to indicate that the product was found
+						break; // No need to continue searching
+					}
+				}
+			}
+			infile2.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error in opening the file for reading.");
+		}
+
+		// Show a message if the product was not found
+		if (!productFound) {
+			System::Windows::Forms::MessageBox::Show("Record for the entered ID doesn't exists");
+			tb_prod_cat->Text = "";
+			//tb_stor_typ->Text = "";
+			cmb_select_manu->Text = "";
+		}
+	}
+
 };
 }
