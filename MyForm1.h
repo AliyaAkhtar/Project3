@@ -2,6 +2,7 @@
 #include "MyForm3.h"
 #include "MyForm4.h"
 #include "MyForm5.h"
+#include "MyForm6.h"
 
 #pragma once
 
@@ -68,9 +69,9 @@ namespace Project3 {
 			// 
 			this->btn_manufacturer->Font = (gcnew System::Drawing::Font(L"Times New Roman", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btn_manufacturer->Location = System::Drawing::Point(34, 28);
+			this->btn_manufacturer->Location = System::Drawing::Point(114, 85);
 			this->btn_manufacturer->Name = L"btn_manufacturer";
-			this->btn_manufacturer->Size = System::Drawing::Size(173, 29);
+			this->btn_manufacturer->Size = System::Drawing::Size(173, 46);
 			this->btn_manufacturer->TabIndex = 5;
 			this->btn_manufacturer->Text = L"MANUFACTURER";
 			this->btn_manufacturer->UseVisualStyleBackColor = true;
@@ -80,9 +81,9 @@ namespace Project3 {
 			// 
 			this->btn_category->Font = (gcnew System::Drawing::Font(L"Times New Roman", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btn_category->Location = System::Drawing::Point(34, 89);
+			this->btn_category->Location = System::Drawing::Point(427, 85);
 			this->btn_category->Name = L"btn_category";
-			this->btn_category->Size = System::Drawing::Size(173, 26);
+			this->btn_category->Size = System::Drawing::Size(186, 46);
 			this->btn_category->TabIndex = 6;
 			this->btn_category->Text = L"CATEGORY";
 			this->btn_category->UseVisualStyleBackColor = true;
@@ -92,9 +93,9 @@ namespace Project3 {
 			// 
 			this->btn_product->Font = (gcnew System::Drawing::Font(L"Times New Roman", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btn_product->Location = System::Drawing::Point(34, 150);
+			this->btn_product->Location = System::Drawing::Point(114, 156);
 			this->btn_product->Name = L"btn_product";
-			this->btn_product->Size = System::Drawing::Size(173, 26);
+			this->btn_product->Size = System::Drawing::Size(173, 48);
 			this->btn_product->TabIndex = 7;
 			this->btn_product->Text = L"PRODUCT";
 			this->btn_product->UseVisualStyleBackColor = true;
@@ -104,9 +105,9 @@ namespace Project3 {
 			// 
 			this->btn_prod_detail->Font = (gcnew System::Drawing::Font(L"Times New Roman", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btn_prod_detail->Location = System::Drawing::Point(34, 211);
+			this->btn_prod_detail->Location = System::Drawing::Point(427, 152);
 			this->btn_prod_detail->Name = L"btn_prod_detail";
-			this->btn_prod_detail->Size = System::Drawing::Size(173, 30);
+			this->btn_prod_detail->Size = System::Drawing::Size(186, 52);
 			this->btn_prod_detail->TabIndex = 8;
 			this->btn_prod_detail->Text = L"PRODUCT DETAILS";
 			this->btn_prod_detail->UseVisualStyleBackColor = true;
@@ -145,8 +146,10 @@ namespace Project3 {
 	}
 	private: System::Void btn_prod_detail_Click(System::Object^ sender, System::EventArgs^ e) {
 		//this->Hide();
-		MyForm5^ form5 = gcnew MyForm5;
-		form5->Show();
+		//MyForm5^ form5 = gcnew MyForm5;
+		//form5->Show();
+		MyForm6^ form6 = gcnew MyForm6;
+		form6->Show();
 	}
 };
 }

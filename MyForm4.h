@@ -6,6 +6,7 @@
 #include <msclr/marshal_cppstd.h>
 #include <sstream>
 #include <algorithm>
+#include <set>
 
 
 namespace Project3 {
@@ -97,11 +98,13 @@ namespace Project3 {
 	private: System::Windows::Forms::Button^ btn_delete_prod;
 	private: System::Windows::Forms::Button^ btn_submit_prod;
 	private: System::Windows::Forms::Label^ lb_prod_id;
+	private: System::Windows::Forms::TextBox^ tb_prod_id;
 
-	private: System::Windows::Forms::TextBox^ textBox1;
+
 	private: System::Windows::Forms::Button^ btn_cancel;
 	private: System::Windows::Forms::Label^ lb_select_cat;
 	private: System::Windows::Forms::ComboBox^ cmb_select_cat;
+	private: System::Windows::Forms::Button^ btn_search_prod;
 
 
 
@@ -127,10 +130,11 @@ namespace Project3 {
 			this->lb_stor_typ = (gcnew System::Windows::Forms::Label());
 			this->tb_stor_typ = (gcnew System::Windows::Forms::TextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->btn_search_prod = (gcnew System::Windows::Forms::Button());
 			this->btn_delete_prod = (gcnew System::Windows::Forms::Button());
 			this->btn_submit_prod = (gcnew System::Windows::Forms::Button());
 			this->lb_prod_id = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->tb_prod_id = (gcnew System::Windows::Forms::TextBox());
 			this->btn_cancel = (gcnew System::Windows::Forms::Button());
 			this->lb_select_cat = (gcnew System::Windows::Forms::Label());
 			this->cmb_select_cat = (gcnew System::Windows::Forms::ComboBox());
@@ -183,30 +187,46 @@ namespace Project3 {
 			// 
 			// tableLayoutPanel1
 			// 
-			this->tableLayoutPanel1->ColumnCount = 2;
+			this->tableLayoutPanel1->ColumnCount = 3;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
+				33.33333F)));
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				50)));
+				33.33333F)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				33.33333F)));
+			this->tableLayoutPanel1->Controls->Add(this->btn_search_prod, 2, 0);
 			this->tableLayoutPanel1->Controls->Add(this->btn_delete_prod, 1, 0);
 			this->tableLayoutPanel1->Controls->Add(this->btn_submit_prod, 0, 0);
 			this->tableLayoutPanel1->Location = System::Drawing::Point(196, 276);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 1;
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(315, 40);
 			this->tableLayoutPanel1->TabIndex = 13;
+			// 
+			// btn_search_prod
+			// 
+			this->btn_search_prod->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->btn_search_prod->Location = System::Drawing::Point(213, 3);
+			this->btn_search_prod->Name = L"btn_search_prod";
+			this->btn_search_prod->Size = System::Drawing::Size(99, 34);
+			this->btn_search_prod->TabIndex = 21;
+			this->btn_search_prod->Text = L"Search";
+			this->btn_search_prod->UseVisualStyleBackColor = true;
+			this->btn_search_prod->Click += gcnew System::EventHandler(this, &MyForm4::btn_search_prod_Click);
 			// 
 			// btn_delete_prod
 			// 
 			this->btn_delete_prod->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btn_delete_prod->Location = System::Drawing::Point(160, 3);
+			this->btn_delete_prod->Location = System::Drawing::Point(108, 3);
 			this->btn_delete_prod->Name = L"btn_delete_prod";
-			this->btn_delete_prod->Size = System::Drawing::Size(152, 34);
+			this->btn_delete_prod->Size = System::Drawing::Size(99, 34);
 			this->btn_delete_prod->TabIndex = 12;
 			this->btn_delete_prod->Text = L"Delete";
 			this->btn_delete_prod->UseVisualStyleBackColor = true;
+			this->btn_delete_prod->Click += gcnew System::EventHandler(this, &MyForm4::btn_delete_prod_Click);
 			// 
 			// btn_submit_prod
 			// 
@@ -214,7 +234,7 @@ namespace Project3 {
 				static_cast<System::Byte>(0)));
 			this->btn_submit_prod->Location = System::Drawing::Point(3, 3);
 			this->btn_submit_prod->Name = L"btn_submit_prod";
-			this->btn_submit_prod->Size = System::Drawing::Size(151, 34);
+			this->btn_submit_prod->Size = System::Drawing::Size(99, 34);
 			this->btn_submit_prod->TabIndex = 0;
 			this->btn_submit_prod->Text = L"Submit";
 			this->btn_submit_prod->UseVisualStyleBackColor = true;
@@ -231,16 +251,16 @@ namespace Project3 {
 			this->lb_prod_id->TabIndex = 14;
 			this->lb_prod_id->Text = L"Enter The Product ID";
 			// 
-			// textBox1
+			// tb_prod_id
 			// 
-			this->textBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
+			this->tb_prod_id->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->tb_prod_id->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(405, 54);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(252, 25);
-			this->textBox1->TabIndex = 15;
+			this->tb_prod_id->Location = System::Drawing::Point(405, 54);
+			this->tb_prod_id->Name = L"tb_prod_id";
+			this->tb_prod_id->Size = System::Drawing::Size(252, 25);
+			this->tb_prod_id->TabIndex = 15;
 			// 
 			// btn_cancel
 			// 
@@ -259,7 +279,7 @@ namespace Project3 {
 			this->lb_select_cat->AutoSize = true;
 			this->lb_select_cat->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lb_select_cat->Location = System::Drawing::Point(109, 218);
+			this->lb_select_cat->Location = System::Drawing::Point(109, 226);
 			this->lb_select_cat->Name = L"lb_select_cat";
 			this->lb_select_cat->Size = System::Drawing::Size(142, 17);
 			this->lb_select_cat->TabIndex = 19;
@@ -270,7 +290,7 @@ namespace Project3 {
 			this->cmb_select_cat->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->cmb_select_cat->FormattingEnabled = true;
-			this->cmb_select_cat->Location = System::Drawing::Point(405, 210);
+			this->cmb_select_cat->Location = System::Drawing::Point(405, 218);
 			this->cmb_select_cat->Name = L"cmb_select_cat";
 			this->cmb_select_cat->Size = System::Drawing::Size(252, 25);
 			this->cmb_select_cat->TabIndex = 20;
@@ -283,7 +303,7 @@ namespace Project3 {
 			this->Controls->Add(this->cmb_select_cat);
 			this->Controls->Add(this->lb_select_cat);
 			this->Controls->Add(this->btn_cancel);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->tb_prod_id);
 			this->Controls->Add(this->lb_prod_id);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Controls->Add(this->tb_stor_typ);
@@ -367,53 +387,180 @@ namespace Project3 {
 		}
 	}
 
-	private: System::Void PopulateCategoryComboBox() {
-		// Open the category file to read category types
-		std::ifstream catFile("C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt");
-		std::string line;
-
-		if (catFile.is_open()) {
-			while (std::getline(catFile, line)) {
-				// Parse the line to extract category type
-				std::istringstream iss(line);
-				int cat_id, manu_id;
-				std::string cat_type;
-
-				// Extract cat_id, manu_id, and category type
-				if (iss >> cat_id >> manu_id) {
-					// Skip '|' delimiter
-					char delimiter;
-					if (iss >> delimiter) {
-						// Extract the category type
-						std::getline(iss, cat_type);
-
-						// Convert the category type to a managed String
-						String^ managedCategoryType = gcnew String(cat_type.c_str());
-
-						// Use String::Trim to remove leading and trailing whitespaces
-						managedCategoryType = managedCategoryType->Trim();
-
-						// Add the category type to the combo box
-						String^ managedCatType = gcnew String(cat_type.c_str());
-
-						// Add it to the combo box only if it's not already present
-						if (!cmb_select_cat->Items->Contains(managedCatType)) {
-							cmb_select_cat->Items->Add(managedCatType);
-						}
-					}
-				}
-			}
-			catFile.close();
-		}
-	}
-
-
-
 	private: System::Void btn_cancel_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->Close();
 	}
+
 	private: System::Void MyForm4_Load(System::Object^ sender, System::EventArgs^ e) {
-		PopulateCategoryComboBox();
+		 std::ifstream catRecordsFile("C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt");
+		 std::string line;
+
+		 if (catRecordsFile.is_open()) {
+			 std::set<std::string> uniqueCategories; // Use a set to store unique category names
+
+			 while (std::getline(catRecordsFile, line)) {
+				 // Split the line by the '|' delimiter
+				 std::istringstream iss(line);
+				 std::string catIDPart, manuIDPart, catnmPart;
+
+				 if (std::getline(iss, catIDPart, '|') && std::getline(iss, manuIDPart, '|') && std::getline(iss, catnmPart)) {
+					 std::string categoryName = catnmPart;
+
+					 // Check if the category name is not in the set (i.e., it's unique)
+					 if (uniqueCategories.find(categoryName) == uniqueCategories.end()) {
+						 System::String^ managedName = gcnew System::String(categoryName.c_str());
+						 cmb_select_cat->Items->Add(managedName);
+
+						 // Add the category name to the set to mark it as added
+						 uniqueCategories.insert(categoryName);
+					 }
+				 }
+			 }
+			 catRecordsFile.close(); // Close the file when done reading
+		 }
+		 else {
+			 // Handle the case where the file cannot be opened
+			 System::Windows::Forms::MessageBox::Show("Error in opening the file for reading.");
+		 }
+	}
+
+	private: System::Void btn_search_prod_Click(System::Object^ sender, System::EventArgs^ e) {
+	
+		int PdIdToSearch = System::Convert::ToInt32(tb_prod_id->Text);
+		System::String^ filePath = "C:/Users/aliya.akhtar/Desktop/Product.txt";
+		std::wstring filePathWStr = msclr::interop::marshal_as<std::wstring>(filePath);
+
+		std::ifstream infile2(filePathWStr);
+		std::string line;
+		bool productFound = false; // Flag to track whether the product was found
+
+		if (infile2.is_open()) {
+			while (std::getline(infile2, line)) {
+				std::istringstream iss(line);
+				//std::string PdIDStr;
+
+				// Extract the PdIDPart
+				std::string PdIDPart, CtIDPart, PdName, PdStorageType;
+				if (std::getline(iss, PdIDPart, '|') && std::getline(iss, CtIDPart, '|') && std::getline(iss, PdName, '|') && std::getline(iss, PdStorageType)) {
+					// Convert PdIDPart to an integer
+					int PdID = std::stoi(PdIDPart);
+
+					// Check if PdID matches the one to search
+					if (PdID == PdIdToSearch) {
+						// Display product details
+						std::string PdNameStr = PdName;
+						std::string ProductStorageTypeStr = PdStorageType;
+
+						// Set the text of Windows Forms controls
+						tb_prod_nm->Text = gcnew System::String(PdNameStr.c_str());
+						tb_stor_typ->Text = gcnew System::String(ProductStorageTypeStr.c_str());
+
+						// Now, find and set the category
+						std::ifstream infile3("C:/Users/aliya.akhtar/Desktop/ProductCategory_Records.txt");
+						if (infile3.is_open()) {
+							while (std::getline(infile3, line)) {
+								std::istringstream iss(line);
+								std::string CtIDPart, manuIDPart, CtNamePart;
+								if (std::getline(iss, CtIDPart, '|') && std::getline(iss, manuIDPart, '|') && std::getline(iss, CtNamePart)) {
+									int CtID = std::stoi(CtIDPart);
+
+									// Check if CtID matches the one from the product
+									if (CtID == std::stoi(CtIDPart)) {
+										std::string CtNameStr = CtNamePart;
+										cmb_select_cat->Text = gcnew System::String(CtNameStr.c_str());
+										break; // Category found, no need to continue searching
+									}
+								}
+							}
+							infile3.close();
+						}
+
+						productFound = true; // Set the flag to indicate that the product was found
+						break; // No need to continue searching
+					}
+				}
+			}
+			infile2.close();
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error in opening the file for reading.");
+		}
+
+		// Show a message if the product was not found
+		if (!productFound) {
+			System::Windows::Forms::MessageBox::Show("Record for the entered ID doesn't exists");
+			tb_prod_nm->Text = "";
+			tb_stor_typ->Text = "";
+			cmb_select_cat->Text = "";
+
+		}
+	}
+
+	private: System::Void btn_delete_prod_Click(System::Object^ sender, System::EventArgs^ e) {
+		int PdIdToDelete = System::Convert::ToInt32(tb_prod_id->Text);
+
+		// File paths
+		System::String^ filePath = "C:/Users/aliya.akhtar/Desktop/Product.txt";
+		std::wstring filePathWStr = msclr::interop::marshal_as<std::wstring>(filePath);
+
+		std::ifstream infile1(filePathWStr);
+		std::string line;
+
+		std::vector<std::string> updatedRecords;  // To store updated records
+		bool recordDeleted = false;  // Flag to track whether a record was deleted
+
+		if (infile1.is_open()) {
+			while (std::getline(infile1, line)) {
+				std::istringstream iss(line);
+				std::string PdIDStr;
+
+				// Extract the PdIDPart
+				std::string PdIDPart;
+				if (std::getline(iss, PdIDPart, '|')) {
+					// Convert PdIDPart to an integer
+					int PdID = std::stoi(PdIDPart);
+
+					// Check if PdID matches the one to delete
+					if (PdID != PdIdToDelete) {
+						updatedRecords.push_back(line); // Keep this record
+					}
+					else {
+						recordDeleted = true; // Record found and deleted
+					}
+				}
+			}
+			infile1.close();
+
+			// Now, write the updated records back to the file
+			std::ofstream outfile(filePathWStr);
+
+			if (outfile.is_open()) {
+				for (const std::string& record : updatedRecords) {
+					outfile << record << "\n";
+				}
+				outfile.close();
+
+				// Clear the textboxes
+				tb_prod_id->Text = "";
+				tb_prod_nm->Text = "";
+				tb_stor_typ->Text = "";
+				cmb_select_cat->Text = "";
+
+				// Display the appropriate message
+				if (recordDeleted) {
+					System::Windows::Forms::MessageBox::Show("Record has been deleted.");
+				}
+				else {
+					System::Windows::Forms::MessageBox::Show("Record for the entered ID does not exist.");
+				}
+			}
+			else {
+				System::Windows::Forms::MessageBox::Show("Error in opening the record file for writing.");
+			}
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("Error in opening the record file for reading.");
+		}
 	}
 };
 }
